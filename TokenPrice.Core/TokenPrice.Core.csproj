@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Chainlink\Models\" />
+    <PackageReference Include="Nethereum.Web3" Version="3.8.0" />
   </ItemGroup>
 
 </Project>

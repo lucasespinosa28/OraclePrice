@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TokenPrice.Core", "TokenPrice.Core\TokenPrice.Core.csproj", "{614273AD-3293-4D1A-9162-4DC5485EA71F}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TokenPrice.Core.Test", "TokenPrice.Core.Test\TokenPrice.Core.Test.csproj", "{7A3AB664-E0D7-44C9-88A8-D73A75CD035A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TokenPrice.Web", "TokenPrice.Web\TokenPrice.Web.csproj", "{3849E085-9793-4A43-9A9A-7CC9416DED81}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{614273AD-3293-4D1A-9162-4DC5485EA71F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{614273AD-3293-4D1A-9162-4DC5485EA71F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{614273AD-3293-4D1A-9162-4DC5485EA71F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A3AB664-E0D7-44C9-88A8-D73A75CD035A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A3AB664-E0D7-44C9-88A8-D73A75CD035A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A3AB664-E0D7-44C9-88A8-D73A75CD035A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A3AB664-E0D7-44C9-88A8-D73A75CD035A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3849E085-9793-4A43-9A9A-7CC9416DED81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3849E085-9793-4A43-9A9A-7CC9416DED81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3849E085-9793-4A43-9A9A-7CC9416DED81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3849E085-9793-4A43-9A9A-7CC9416DED81}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,39 @@
+﻿@using System.Threading;
+@using TokenPrice.Web.Models
+@using Nethereum.Web3
+@using TokenPrice.Core.Chainlink;
+
+<span>@Count</span>
+<TokenRow TokenInfo=@Tokens />
+
+@code {
+    private int Count { get; set; } = 0;
+    public static Web3 web3 { get; set; } = new Web3("");
+    public TokenInformation Tokens { get; set; } = new TokenInformation();
+    Oracle Oracle = new Oracle
+    {
+        Web3 = web3
+    };
+    protected override async Task OnInitializedAsync()
+    {
+        StartCountdown();
+    }
+    void StartCountdown()
+    {
+        var timer = new Timer(new TimerCallback(async _ =>
+        {
+
+            Count++;
+            var result2 = await Oracle.GetDescriptionAsync("0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419");
+            var result1 = await Oracle.GetLastRoundDataAsync("0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419");
+
+            Tokens.LastPriceEth = Decimal.Parse(result1.Answer.ToString());
+            Tokens.Name = result2[0];
+            StateHasChanged();
+
+        //InvokeAsync(() =>
+        //{
+        //});
+    }), false, 0, 1000 * 30);
+    }
+}

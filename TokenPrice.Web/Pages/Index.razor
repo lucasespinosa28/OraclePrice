@@ -1,0 +1,81 @@
+﻿@page "/"
+@using Nethereum.Web3
+@using TokenPrice.Web.Models
+@using System.Threading.Tasks;
+@using TokenPrice.Core.Chainlink;
+<h1>Hello, world!</h1>
+<h2>@MyProperty</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        <EthPrice />
+        @foreach (var item in TokenPrice.Web.Data.Tokens.AddressAndContract)
+        {
+         <AltCoinPrice ContractAddress=@item.Item2/>       
+        }
+    </tbody>
+</table>
+<TimerCount/>
+<SurveyPrompt Title="How is Blazor working for you?" />
+
+
+
+@code {
+    public List<string> Name { get; set; } = new List<string>();
+    public List<TokenInformation> Tokens { get; set; } = new List<TokenInformation>();
+    public string MyProperty { get; set; } = "heool";
+    public static Web3 web3 { get; set; } = new Web3("");
+
+    //protected override async Task OnInitializedAsync()
+    //{
+
+    //    //Parallel.ForEach(Tokens.AddressAndContract, (contract) =>
+    //    //{
+    //    //    Name.Add(contract.Item2);
+    //    //});
+    //    Oracle Oracle = new Oracle
+    //    {
+    //        Web3 = web3
+    //    };
+
+
+    //    TokenPrice.Web.Data.Tokens.AddressAndContract.ForEach(async contract =>
+    //    {
+    //        var result2 = await Oracle.GetDescriptionAsync(contract.Item2).ConfigureAwait(true);
+    //        var result1 = await Oracle.GetLastRoundDataAsync(contract.Item2).ConfigureAwait(true);
+    //        var ehtPrice = TokenPrice.Core.Utils.WeiToEth(result1.Answer);
+    //        Tokens.Add(
+    //            new TokenInformation()
+    //            {
+    //                LastPriceEth = ehtPrice,
+    //                Name = result2[0]
+    //            }
+    //        );
+    //        //Name.Add($"{result2[0]} {ehtPrice}");
+    //    });
+    //    //async Task<string> Test()
+    //    //{
+    //    //    var result1 = Oracle.GetDescriptionAsync("0x6Df09E975c830ECae5bd4eD9d90f3A95a4f88012");
+    //    //    var result2 = await Oracle.GetLastRoundDataAsync("0x6Df09E975c830ECae5bd4eD9d90f3A95a4f88012");
+    //    //    return result1[0] + " " + TokenPrice.Core.Utils.WeiToEth(result2.Answer);
+    //    //}
+    //    //MyProperty = await Test();
+    //    //foreach (var item in Tokens.AddressAndContract)
+    //    //{
+    //    //    var Description = new TokenPrice.Core.Chainlink.Oracle
+    //    //    {
+    //    //        Web3 = web3
+    //    //    };
+    //    //    //return await Description.GetDescriptionAsync(contract);
+    //    //    //Name.Add(item.Item2);
+    //    //}
+
+
+
+    //}
+}
