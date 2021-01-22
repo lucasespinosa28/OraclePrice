@@ -1,11 +1,4 @@
-﻿using Nethereum.Web3;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using TokenPrice.Web.Models;
-
-namespace TokenPrice.Web.Class.Oracle
+﻿namespace TokenPrice.Web.Class.Oracle
 {
     public partial class Token
     {

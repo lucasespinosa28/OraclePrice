@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Numerics;
-
-namespace TokenPrice.Web.Models
+﻿namespace TokenPrice.Web.Models
 {
     public class TokenInformation
     {

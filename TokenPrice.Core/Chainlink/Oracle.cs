@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using TokenPrice.Core.Chainlink;
-using System.Text;
+﻿using Nethereum.Web3;
 using System.Numerics;
-using static TokenPrice.Core.Chainlink.Models;
-using Nethereum.Web3;
-using Nethereum.Web3.Accounts;
 using System.Threading.Tasks;
+using static TokenPrice.Core.Chainlink.Models;
 
 namespace TokenPrice.Core.Chainlink
 {
@@ -19,12 +14,12 @@ namespace TokenPrice.Core.Chainlink
             var priceOfFunctionMessage = new LatestRoundData() { };
             return await priceHandler.QueryDeserializingToObjectAsync<RoundDataOfOutputDTO>(priceOfFunctionMessage, contractAddress);
         }
-        public async Task<RoundDataOfOutputDTO> GetRoundDataAsync(string contractAddress, string roundId)
+        public async Task<RoundDataOfOutputDTO> GetRoundDataAsync(string contractAddress, BigInteger roundId)
         {
             var priceHandler = Web3.Eth.GetContractQueryHandler<GetRoundData>();
             var priceOfFunctionMessage = new GetRoundData()
             {
-                RoundId = BigInteger.Parse(roundId)
+                RoundId = roundId
             };
             return await priceHandler.QueryDeserializingToObjectAsync<RoundDataOfOutputDTO>(priceOfFunctionMessage, contractAddress);
         }

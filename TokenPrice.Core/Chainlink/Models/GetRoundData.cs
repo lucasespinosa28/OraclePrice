@@ -7,7 +7,7 @@ namespace TokenPrice.Core.Chainlink
     public partial class Models
     {
         [Function("getRoundData")]
-        public class GetRoundData : FunctionMessage 
+        public class GetRoundData : FunctionMessage
         {
             [Parameter("uint80", "_roundId", 1)]
             public BigInteger RoundId { get; set; }

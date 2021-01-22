@@ -13,14 +13,15 @@
         </tr>
     </thead>
     <tbody>
-        <EthPrice />
+        <EthPrice/>
         @foreach (var item in TokenPrice.Web.Data.Tokens.AddressAndContract)
         {
-         <AltCoinPrice ContractAddress=@item.Item2/>       
+         <EthPrice ContractAddress=@item.Item2/>       
         }
     </tbody>
 </table>
 <TimerCount/>
+<HistoricalData />
 <SurveyPrompt Title="How is Blazor working for you?" />
 
 
@@ -29,7 +30,7 @@
     public List<string> Name { get; set; } = new List<string>();
     public List<TokenInformation> Tokens { get; set; } = new List<TokenInformation>();
     public string MyProperty { get; set; } = "heool";
-    public static Web3 web3 { get; set; } = new Web3("");
+    public static Web3 web3 { get; set; } = new Web3("https://mainnet.infura.io/v3/0");
 
     //protected override async Task OnInitializedAsync()
     //{

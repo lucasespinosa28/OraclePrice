@@ -1,5 +1,4 @@
-﻿using Nethereum.ABI.FunctionEncoding.Attributes;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Numerics;
 
 namespace TokenPrice.Core.Chainlink

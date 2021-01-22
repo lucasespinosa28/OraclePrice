@@ -1,6 +1,4 @@
-﻿using Nethereum.Web3;
-using System;
-using System.Numerics;
+﻿using System;
 
 
 namespace TokenPrice.Core

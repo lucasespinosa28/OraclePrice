@@ -7,8 +7,11 @@
 <TokenRow TokenInfo=@Tokens />
 
 @code {
+
+    [Parameter]
+    public string ContractAddress { get; set; } = "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419";
+    public static Web3 web3 { get; set; } = new Web3("https://mainnet.infura.io/v3/0");
     private int Count { get; set; } = 0;
-    public static Web3 web3 { get; set; } = new Web3("");
     public TokenInformation Tokens { get; set; } = new TokenInformation();
     Oracle Oracle = new Oracle
     {
@@ -24,16 +27,16 @@
         {
 
             Count++;
-            var result2 = await Oracle.GetDescriptionAsync("0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419");
-            var result1 = await Oracle.GetLastRoundDataAsync("0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419");
+            var result2 = await Oracle.GetDescriptionAsync(ContractAddress);
+            var result1 = await Oracle.GetLastRoundDataAsync(ContractAddress);
 
             Tokens.LastPriceEth = Decimal.Parse(result1.Answer.ToString());
             Tokens.Name = result2[0];
             StateHasChanged();
 
-        //InvokeAsync(() =>
-        //{
-        //});
-    }), false, 0, 1000 * 30);
+            //InvokeAsync(() =>
+            //{
+            //});
+        }), false, 0, 1000 * 30);
     }
 }

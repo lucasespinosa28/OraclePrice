@@ -1,6 +1,6 @@
-﻿using static TokenPrice.Core.Utils;
-using System.Numerics;
+﻿using System.Numerics;
 using Xunit;
+using static TokenPrice.Core.Utils;
 
 
 namespace Utils
@@ -33,6 +33,6 @@ namespace Utils
                 BigInteger Eth = new BigInteger(1e16);
                 Assert.Equal(0.01M, WeiToEth(Eth));
             }
-        } 
+        }
     }
 }

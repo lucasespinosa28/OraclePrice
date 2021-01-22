@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head>
@@ -10,6 +10,7 @@
     <link href="css/app.css" rel="stylesheet" />
     <link href="manifest.json" rel="manifest" />
     <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
 </head>
 
 <body>
@@ -22,6 +23,41 @@
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
+    <script>
+        window.convertArray = (win1251Array) => {
+            var win1251decoder = new TextDecoder('windows-1251');
+            var bytes = new Uint8Array(win1251Array);
+            var decodedArray = win1251decoder.decode(bytes);
+            console.log(decodedArray);
+            return decodedArray;
+
+        };
+        window.TradingView = (data) => {
+            const path = document.getElementById("chartDiv");
+            const chart = LightweightCharts.createChart(path, {
+                width: 400,
+                height: 300, 
+                timeScale: {
+                    timeVisible: true,
+                    secondsVisible: true,
+                },});
+            
+            const lineSeries = chart.addLineSeries();
+            lineSeries.setData(data);
+            //lineSeries.setData([
+            //    { time: '2019-04-11', value: 80.01 },
+            //    { time: '2019-04-12', value: 96.63 },
+            //    { time: '2019-04-13', value: 76.64 },
+            //    { time: '2019-04-14', value: 81.89 },
+            //    { time: '2019-04-15', value: 74.43 },
+            //    { time: '2019-04-16', value: 80.01 },
+            //    { time: '2019-04-17', value: 96.63 },
+            //    { time: '2019-04-18', value: 76.64 },
+            //    { time: '2019-04-19', value: 81.89 },
+            //    { time: '2019-04-20', value: 74.43 },
+            //]);
+        }
+    </script>
 </body>
 
-</html>
+</html >

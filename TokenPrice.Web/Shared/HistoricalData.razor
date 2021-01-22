@@ -1,0 +1,50 @@
+﻿@using TokenPrice.Core.Chainlink;
+@inject IJSRuntime JS;
+
+<h3>HistoricalData</h3>
+<button type="button" class="btn btn-primary" @onclick="Addchart">AddChart</button>
+<div id="chartDiv"></div>
+
+@code {
+    public class data
+    {
+        public long time { get; set; }
+        public double value { get; set; }
+    }
+    public List<string> TextTest { get; set; } = new List<string>();
+    public List<data> PriceTest { get; set; } = new List<data>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Oracle Oracle = new Oracle
+        {
+            Web3 = new Web3("https://mainnet.infura.io/v3/0"),
+        };
+        var LastPrice = await Oracle.GetLastRoundDataAsync("0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419");
+        var lastRoundId = LastPrice.RoundId - 1000;
+        for (int i = 0; i < 100; i++)
+        {
+            var data = await Oracle.GetRoundDataAsync("0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419", lastRoundId + i*10);
+            PriceTest.Add(new data { time = data.UpdatedAt, value = (double)data.Answer/1e8 });
+            TextTest.Add($"{data.UpdatedAt} {(double)data.Answer/1e8}");
+        }
+    }
+    private async Task Addchart()
+    {
+        List<data> chartdata = new List<data>()
+        {
+            //new data { time = 1577836800, value = 1556546546516514684 },
+            //new data { time = 1577923200, value = 1456546546516514684 },
+            //new data { time = 1578009600, value = 1656546546516514684 },
+              new data { time = 1611253046  , value = 1556546546516514684 },
+              new data { time = 1611253312  , value = 1456546546516514684 },
+              new data { time = 1611253478  , value = 1656546546516514684 },
+              new data { time = 1611253825   , value = 1356546546516514684 },
+
+        };
+
+
+
+        await JS.InvokeVoidAsync("TradingView", PriceTest);
+    }
+}

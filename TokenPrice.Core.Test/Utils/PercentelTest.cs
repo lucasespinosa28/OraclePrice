@@ -1,6 +1,5 @@
-﻿using static TokenPrice.Core.Utils;
-using System;
-using Xunit;
+﻿using Xunit;
+using static TokenPrice.Core.Utils;
 
 
 namespace Utils
