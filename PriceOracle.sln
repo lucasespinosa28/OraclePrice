@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PriceOracle.Core", "PriceOracle.Core\PriceOracle.Core.csproj", "{614273AD-3293-4D1A-9162-4DC5485EA71F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PriceOracle.Web", "TokenPrice.Web\PriceOracle.Web.csproj", "{3849E085-9793-4A43-9A9A-7CC9416DED81}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PriceOracle.Web", "PriceOracle.Web\PriceOracle.Web.csproj", "{3849E085-9793-4A43-9A9A-7CC9416DED81}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

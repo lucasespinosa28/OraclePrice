@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TokenPrice.Core\PriceOracle.Core.csproj" />
+    <ProjectReference Include="..\PriceOracle.Core\PriceOracle.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
