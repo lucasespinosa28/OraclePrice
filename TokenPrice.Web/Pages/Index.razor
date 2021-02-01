@@ -1,82 +1,55 @@
 ﻿@page "/"
-@using Nethereum.Web3
-@using TokenPrice.Web.Models
-@using System.Threading.Tasks;
-@using TokenPrice.Core.Chainlink;
-<h1>Hello, world!</h1>
-<h2>@MyProperty</h2>
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Price</th>
-        </tr>
-    </thead>
-    <tbody>
-        <EthPrice/>
-        @foreach (var item in TokenPrice.Web.Data.Tokens.AddressAndContract)
+@inject NavigationManager MyNavigationManager
+@using System.Text.Json
+
+
+<h2 class="text-center">Atual data is source Aave tokens,<a href="/chainlink">Change to Chainlink oracle tokens</a></h2>
+<button class="btn btn-light btn-lg"  @onclick="(async () =>  LoadAave())">Click to load data</button>
+@if (Load)
+{
+    <TableToken TokenAddress="@Tokens" />
+}
+@*<TimerCount />*@
+@*<HistoricalData />*@
+@*<SurveyPrompt Title="How is Blazor working for you?" />*@
+@code
+{
+
+    public class Rootobject
+    {
+        public string[] Address { get; set; }
+    }
+
+    public List<string> AddressChainlink { get; set; } = new List<string>();
+    public string text { get; set; }
+    public List<TokenAddressSymbol> TokenAddress { get; set; } = new List<TokenAddressSymbol>();
+    public List<TokenAddressSymbol> TokenAddress1 { get; set; } = new List<TokenAddressSymbol>();
+    public List<TokenAddressSymbol> Tokens { get; set; } =
+    new List<TokenAddressSymbol>();
+    public bool Load { get; set; } = false;
+
+    public HttpClient HttpClient { get; set; } = new HttpClient();
+    async Task LoadAave()
+    {
+        Tokens = TokenAddress;
+        Load = true;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var aave = new Aave(Connect.Web3);
+        var protocolDataProvider = aave.ProtocolDataProvider();
+        var result = await protocolDataProvider.GetAllReservesTokensQueryAsync();
+        foreach (var token in result.ReserveTokens)
         {
-         <EthPrice ContractAddress=@item.Item2/>       
+            if (token.Symbol == "WBTC")
+            {
+                token.Symbol = "BTC";
+            }
+            if (token.Symbol != "WETH")
+            {
+                TokenAddress.Add(new TokenAddressSymbol { Address = token.TokenAddress, Symbol = token.Symbol });
+            }
         }
-    </tbody>
-</table>
-<TimerCount/>
-<HistoricalData />
-<SurveyPrompt Title="How is Blazor working for you?" />
-
-
-
-@code {
-    public List<string> Name { get; set; } = new List<string>();
-    public List<TokenInformation> Tokens { get; set; } = new List<TokenInformation>();
-    public string MyProperty { get; set; } = "heool";
-    public static Web3 web3 { get; set; } = new Web3("https://mainnet.infura.io/v3/0");
-
-    //protected override async Task OnInitializedAsync()
-    //{
-
-    //    //Parallel.ForEach(Tokens.AddressAndContract, (contract) =>
-    //    //{
-    //    //    Name.Add(contract.Item2);
-    //    //});
-    //    Oracle Oracle = new Oracle
-    //    {
-    //        Web3 = web3
-    //    };
-
-
-    //    TokenPrice.Web.Data.Tokens.AddressAndContract.ForEach(async contract =>
-    //    {
-    //        var result2 = await Oracle.GetDescriptionAsync(contract.Item2).ConfigureAwait(true);
-    //        var result1 = await Oracle.GetLastRoundDataAsync(contract.Item2).ConfigureAwait(true);
-    //        var ehtPrice = TokenPrice.Core.Utils.WeiToEth(result1.Answer);
-    //        Tokens.Add(
-    //            new TokenInformation()
-    //            {
-    //                LastPriceEth = ehtPrice,
-    //                Name = result2[0]
-    //            }
-    //        );
-    //        //Name.Add($"{result2[0]} {ehtPrice}");
-    //    });
-    //    //async Task<string> Test()
-    //    //{
-    //    //    var result1 = Oracle.GetDescriptionAsync("0x6Df09E975c830ECae5bd4eD9d90f3A95a4f88012");
-    //    //    var result2 = await Oracle.GetLastRoundDataAsync("0x6Df09E975c830ECae5bd4eD9d90f3A95a4f88012");
-    //    //    return result1[0] + " " + TokenPrice.Core.Utils.WeiToEth(result2.Answer);
-    //    //}
-    //    //MyProperty = await Test();
-    //    //foreach (var item in Tokens.AddressAndContract)
-    //    //{
-    //    //    var Description = new TokenPrice.Core.Chainlink.Oracle
-    //    //    {
-    //    //        Web3 = web3
-    //    //    };
-    //    //    //return await Description.GetDescriptionAsync(contract);
-    //    //    //Name.Add(item.Item2);
-    //    //}
-
-
-
-    //}
+    }
 }

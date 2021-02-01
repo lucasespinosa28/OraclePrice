@@ -1,11 +1,20 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
+    <PackageReference Include="Nethereum.ENS" Version="3.8.0" />
     <PackageReference Include="Nethereum.Web3" Version="3.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Tokens\" />
   </ItemGroup>
 
 </Project>

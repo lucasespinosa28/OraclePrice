@@ -13,9 +13,9 @@ namespace Aave
         {
             var Reserve = new GetAave
             {
-                Web3 = neth.web3
+                Web3 = Neth.GetWeb3
             };
-            var result = await Reserve.GetReserveDataAsync("0x057835Ad21a177dbdd3090bB1CAE03EaCF78Fc6d","0xdAC17F958D2ee523a2206206994597C13D831ec7");
+            var result = await Reserve.GetReserveDataAsync("0xdAC17F958D2ee523a2206206994597C13D831ec7","0x057835Ad21a177dbdd3090bB1CAE03EaCF78Fc6d");
             Assert.NotNull(result);
         }
     }

@@ -1,0 +1,135 @@
+﻿<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Symbol</th>
+            <th scope="col">Name</th>
+            @*<th scope="col">Address</th>*@
+            <th scope="col">Price</th>
+            <th scope="col"></th>
+            <th scope="col">Liquidity</th>
+            @*<th scope="col">Decimals</th>*@
+            <th scope="col">Total Supply</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Loading)
+        {
+            <ul class="nav justify-content-center">
+                <li class="nav-item">
+                    <div class="spinner-grow text-info" role="status">
+                        <span class="visually-hidden"></span>
+                    </div>
+                </li>
+            </ul>
+        }
+        @foreach (var token in Tokens)
+        {
+    <tr @onclick="(() => Trigger(token))" id="@token.Symbol" style="cursor: pointer;">
+        <th><img style="max-height: 35px; max-width: 35px" src="Images/Tokens/dai.svg" alt="" /></th>
+        <td class="fs-4">@token.Symbol</td>
+        <td class="fs-4">@token.Name</td>
+        @*<td class="fs-4">@token.Address</td>*@
+        @if (token.Symbol.ToLower() == "eth")
+        {
+            var price = token.PriceUsd / 100000000;
+            <td class="fs-4">$@price.ToString("0.##")</td>
+        }
+        else
+        {
+            <td class="fs-4">$@token.PriceUsd.ToString("0.##")</td>
+        }
+        <td class="fs-4">Ξ<span>@token.PriceEth</span></td>
+        <td class="fs-4">@token.Liquidity%</td>
+        @*<td class="fs-4">@token.Decimals</td>*@
+        <td class="fs-4">@token.TotalSupply</td>
+    </tr>
+            if (token.Open)
+            {
+                <div class="modal" tabindex="-1" style="display: block">
+                    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">@token.Name</h5>
+                                <button type="button" class="btn-close" @onclick="() => Trigger(token)" aria-label="Close">X</button>
+                            </div>
+                            <div class="modal-body">
+                                <ModelToken Symbol="@token.Symbol" Dollar="@token.PriceUsd" Ether="@token.PriceEth" Liquidity="@token.Liquidity" StableBorrow="@token.StableBorrow" />
+                            </div>
+                            <div class="modal-footer">
+                                <a href="https://etherscan.io/token/@token.Address">@token.Address</a>
+                                <button type="button" class="btn btn-secondary" @onclick="() => Trigger(token)">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </tbody>
+</table>
+@code {
+    [Parameter]
+    public List<TokenAddressSymbol> TokenAddress { get; set; }
+
+    public List<Token> Tokens { get; set; } = new List<Token> { };
+    public Token EthToken { get; set; } = new Token() { };
+    public bool Loading { get; set; } = true;
+    protected override async Task OnInitializedAsync()
+    {
+        var link = new Chainlink(Connect.Web3);
+        var latestEthPrice = await link.Pricefeed("0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419").GetLatestRoundDataAsync();
+        EthToken.Name = "Ethereum";
+        EthToken.Symbol = "Eth";
+        EthToken.PriceEth = 1;
+        EthToken.PriceUsd = (decimal)latestEthPrice.Answer;
+        EthToken.TotalSupply = new BigInteger(11446688522);
+
+        var aave = new Aave(Connect.Web3);
+        var Erc20 = new TokenPrice.Core.Erc20.Erc20(Connect.Web3);
+        var protocolDataProvider = aave.ProtocolDataProvider();
+        var PriceOracle = aave.PriceOracle();
+        var Address = new List<string>() { };
+        Parallel.ForEach(TokenAddress, (token) =>
+        {
+            Address.Add(token.Address);
+            Tokens.Add(new Token()
+            {
+                Address = token.Address,
+                Symbol = token.Symbol
+            });
+        });
+        var PriceResult = await PriceOracle.GetAssetsPricesQueryAsync(Address);
+        for (int i = 0; i < Tokens.Count; i++)
+        {
+            if (Tokens[i].Symbol == "MKR")
+            {
+                Tokens[i].Name = "Maker";
+
+            }
+            Tokens[i].TotalSupply = await Erc20.GeTotalSupplyAsync(Tokens[i].Address);
+            var resultData = await protocolDataProvider.GetReserveDataQueryAsync(Tokens[i].Address);
+            Tokens[i].Liquidity = Utils.Percentage(resultData.LiquidityRate);
+            Tokens[i].PriceEth = Web3.Convert.FromWei(PriceResult[i]);
+            Tokens[i].PriceUsd = ((Tokens[i].PriceEth * EthToken.PriceUsd) / (decimal)Math.Pow(10, 8));
+            Tokens[i].Name = await Erc20.GetNameAsync(Tokens[i].Address, Tokens[i].Symbol);
+            Tokens[i].StableBorrow = Utils.Percentage(resultData.StableBorrowRate);
+            Tokens[i].VariableBorrow = Utils.Percentage(resultData.VariableBorrowRate);
+            Tokens[i].Open = false;
+            StateHasChanged();
+        }
+        Loading = false;
+        Tokens.Insert(0, EthToken);
+    }
+
+    void Trigger(Token token)
+    {
+        if (token.Open == false)
+        {
+            token.Open = true;
+        }
+        else
+        {
+            token.Open = false;
+        }
+    }
+}

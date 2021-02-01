@@ -1,0 +1,164 @@
+﻿@page "/chainlink"
+@using System.Text.Json
+@using Nethereum.ENS
+@inject NavigationManager MyNavigationManager
+<h2 class="text-center">Atual data is source from Chainlink oracle tokens,<a href="/chainlink">Change to Aave tokens</a></h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Symbol</th>
+            <th scope="col">Name</th>
+            @*<th scope="col">Address</th>*@
+            <th scope="col">Price</th>
+            <th scope="col"></th>
+            <th scope="col">Liquidity</th>
+            @*<th scope="col">Decimals</th>*@
+            <th scope="col">Total Supply</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Loading)
+        {
+            <ul class="nav justify-content-center">
+                <li class="nav-item">
+                    <div class="spinner-grow text-info" role="status">
+                        <span class="visually-hidden"></span>
+                    </div>
+                </li>
+            </ul>
+        }
+        @foreach (var token in Tokens)
+        {
+            <tr @onclick="(() => Trigger(token))" id="@token.Symbol" style="cursor: pointer;">
+                <th><img style="max-height: 35px; max-width: 35px" src="Images/Tokens/dai.svg" alt="" /></th>
+                <td class="fs-4">@token.Symbol</td>
+                <td class="fs-4">@token.Name</td>
+                @*<td class="fs-4">@token.Address</td>*@
+                <td class="fs-4">$@token.PriceUsd.ToString("0.##")</td>
+                <td class="fs-4">Ξ<span>@token.PriceEth</span></td>
+                <td class="fs-4">@token.Liquidity%</td>
+                @*<td class="fs-4">@token.Decimals</td>*@
+                <td class="fs-4">@token.TotalSupply</td>
+            </tr>
+            if (token.Open)
+            {
+                <div class="modal" tabindex="-1" style="display: block">
+                    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">@token.Name</h5>
+                                <button type="button" class="btn-close" @onclick="() => Trigger(token)" aria-label="Close">X</button>
+                            </div>
+                            <div class="modal-body">
+                                <ModelToken Symbol="@token.Symbol" Dollar="@token.PriceUsd" Ether="@token.PriceEth" Liquidity="@token.Liquidity" StableBorrow="@token.StableBorrow" />
+                            </div>
+                            <div class="modal-footer">
+                                <a href="https://etherscan.io/token/@token.Address">@token.Address</a>
+                                <button type="button" class="btn btn-secondary" @onclick="() => Trigger(token)">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        }
+    </tbody>
+</table>
+@code {
+
+    public List<TokenAddressSymbol> TokenAddress { get; set; } = new List<TokenAddressSymbol>();
+
+
+    public class Rootobject
+    {
+        public string[] Address { get; set; }
+    }
+
+
+    public HttpClient HttpClient { get; set; } = new HttpClient();
+
+    public List<Token> Tokens { get; set; } = new List<Token> { };
+    public Token EthToken { get; set; } = new Token() { };
+    public bool Loading { get; set; } = true;
+    protected override async Task OnInitializedAsync()
+    {
+        var Erc20 = new Core.Erc20.Erc20(Connect.Web3);
+        var link = new Chainlink(Connect.Web3).Pricefeed("0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419");
+
+        var aave = new Aave(Connect.Web3);
+        var protocolDataProvider = aave.ProtocolDataProvider();
+
+        var latestEthPrice = await link.GetLatestRoundDataAsync();
+        EthToken.Name = "Ethereum";
+        EthToken.Symbol = "Eth";
+        EthToken.PriceEth = 1;
+        EthToken.PriceUsd = (decimal)latestEthPrice.Answer;
+        EthToken.TotalSupply = new BigInteger(11446688522);
+
+
+        var data = await HttpClient.GetStringAsync($"{MyNavigationManager.BaseUri}/data/AddressChainlink.json");
+        var json = JsonSerializer.Deserialize<Rootobject>(data, new JsonSerializerOptions { AllowTrailingCommas = true });
+
+        for (int i = 0; i < json.Address.Length; i++)
+        {
+            var newToken = new Token();
+
+            newToken.Symbol = await Erc20.GetSymbolAsync(json.Address[i]);
+            newToken.Address = json.Address[i];
+
+            var EnsAddress = $"{newToken.Symbol.ToLower()}-eth.data.eth";
+            var ensService = new ENSService(Connect.Web3);
+            var oracleAddress = await ensService.ResolveAddressAsync(EnsAddress);
+
+            link = new Chainlink(Connect.Web3).Pricefeed(oracleAddress);
+            try
+            {
+                var lastPrice = await link.GetLatestRoundDataAsync();
+                newToken.PriceEth = Web3.Convert.FromWei(lastPrice.Answer);
+                newToken.PriceUsd = ((newToken.PriceEth * EthToken.PriceUsd) / (decimal)Math.Pow(10, 8));
+                newToken.TotalSupply = await Erc20.GeTotalSupplyAsync(json.Address[i]);
+                newToken.Decimals = await Erc20.GetDecimalsAsync(json.Address[i]);
+                newToken.Name = await Erc20.GetNameAsync(json.Address[i], newToken.Address);
+
+                try
+                {
+                    var AaveData = await protocolDataProvider.GetReserveDataQueryAsync(newToken.Address);
+                    newToken.Liquidity = Utils.Percentage(AaveData.LiquidityRate);
+                    newToken.StableBorrow = Utils.Percentage(AaveData.LiquidityRate);
+                    newToken.VariableBorrow = Utils.Percentage(AaveData.LiquidityRate);
+
+                }
+                catch (Exception e)
+                {
+                    newToken.Liquidity = 0;
+                    newToken.StableBorrow = 0;
+                    newToken.VariableBorrow = 0;
+                }
+
+                newToken.Open = false;
+                Tokens.Add(newToken);
+                StateHasChanged();
+            }
+            catch (Exception e)
+            {
+            }
+        }
+        EthToken.PriceUsd = EthToken.PriceUsd / (decimal)Math.Pow(10, 8);
+        Tokens.Insert(0, EthToken);
+        Loading = false;
+
+    }
+
+    void Trigger(Token token)
+    {
+        if (token.Open == false)
+        {
+            token.Open = true;
+        }
+        else
+        {
+            token.Open = false;
+        }
+    }
+}

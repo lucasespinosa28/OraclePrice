@@ -1,50 +1,74 @@
-﻿@using TokenPrice.Core.Chainlink;
+﻿@using TokenPrice.Core;
+@using Nethereum.ENS
 @inject IJSRuntime JS;
 
 <h3>HistoricalData</h3>
-<button type="button" class="btn btn-primary" @onclick="Addchart">AddChart</button>
-<div id="chartDiv"></div>
-
+@if (loading)
+{
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: @Progress%;" aria-valuenow="@Progress" aria-valuemin="0" aria-valuemax="100">@Progress</div>
+    </div>
+}
+@if (Error.Item1)
+{
+    <p>@Error.Item2</p>
+}
+else
+{
+    <div id="chartDiv"></div>
+}
 @code {
+    [Parameter]
+    public string Symbol { get; set; }
+
+    public int Progress { get; set; } = 0;
+
+    public bool loading { get; set; } = true;
+
+    public (bool,string) Error { get; set; } = (false,"");
+
     public class data
     {
         public long time { get; set; }
-        public double value { get; set; }
+        public decimal value { get; set; }
     }
     public List<string> TextTest { get; set; } = new List<string>();
     public List<data> PriceTest { get; set; } = new List<data>();
 
     protected override async Task OnInitializedAsync()
     {
-        Oracle Oracle = new Oracle
+        string oracleAddress;
+        if (Symbol.ToLower() == "eth")
         {
-            Web3 = new Web3("https://mainnet.infura.io/v3/0"),
-        };
-        var LastPrice = await Oracle.GetLastRoundDataAsync("0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419");
-        var lastRoundId = LastPrice.RoundId - 1000;
-        for (int i = 0; i < 100; i++)
-        {
-            var data = await Oracle.GetRoundDataAsync("0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419", lastRoundId + i*10);
-            PriceTest.Add(new data { time = data.UpdatedAt, value = (double)data.Answer/1e8 });
-            TextTest.Add($"{data.UpdatedAt} {(double)data.Answer/1e8}");
+            var ensService = new ENSService(Connect.Web3);
+            oracleAddress = await ensService.ResolveAddressAsync($"eth-usd.data.eth");
         }
-    }
-    private async Task Addchart()
-    {
-        List<data> chartdata = new List<data>()
+        else
         {
-            //new data { time = 1577836800, value = 1556546546516514684 },
-            //new data { time = 1577923200, value = 1456546546516514684 },
-            //new data { time = 1578009600, value = 1656546546516514684 },
-              new data { time = 1611253046  , value = 1556546546516514684 },
-              new data { time = 1611253312  , value = 1456546546516514684 },
-              new data { time = 1611253478  , value = 1656546546516514684 },
-              new data { time = 1611253825   , value = 1356546546516514684 },
-
-        };
-
-
-
-        await JS.InvokeVoidAsync("TradingView", PriceTest);
+            var text = $"{Symbol.ToLower()}-eth.data.eth";
+            var ensService = new ENSService(Connect.Web3);
+            oracleAddress = await ensService.ResolveAddressAsync(text);
+        }
+        var link = new Chainlink(Connect.Web3);
+        var pricefeed = link.Pricefeed(oracleAddress);
+        try
+        {
+            var lastRoundId = await pricefeed.GetLatestRoundDataAsync();
+            for (int i = 0; i <100; i++)
+            {
+                var lastest = (lastRoundId.RoundId - 100) + i;
+                var data = await pricefeed.GetRoundDataAsync(lastest.ToString());
+                PriceTest.Add(new data { time = data.UpdatedAt, value = Web3.Convert.FromWei(data.Answer) });
+                TextTest.Add($"{data.UpdatedAt} {(double)data.Answer/1e8}");
+                Progress++;
+                StateHasChanged();
+            }
+            await JS.InvokeVoidAsync("TradingView", PriceTest);
+        }
+        catch (Exception e)
+        {
+            Error = (true,"Price not found");
+        }
+        loading = false;
     }
 }

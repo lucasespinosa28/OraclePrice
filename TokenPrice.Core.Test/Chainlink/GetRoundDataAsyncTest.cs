@@ -13,7 +13,7 @@ namespace Chainlink
         {
             var price = new TokenPrice.Core.Chainlink.Oracle
             {
-                Web3 = neth.web3
+                Web3 = Neth.GetWeb3
             };
             var roundId = BigInteger.Parse("18446744073709553596");
             var data = await price.GetRoundDataAsync("0x6Df09E975c830ECae5bd4eD9d90f3A95a4f88012", roundId);

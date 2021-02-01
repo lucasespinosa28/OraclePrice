@@ -1,0 +1,82 @@
+﻿<div class="container">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="alert alert-info">
+                    <p>$@Dollar</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="alert alert-info">
+                    <p>Ξ<span>@Ether</span></p>
+                </div>
+            </div>
+        </div>
+        @if (Liquidity > 0)
+        {
+            <div class="row">
+                <div class="col">
+                    <a href="https://app.aave.com/reserve-overview/@Symbol?pool=AaveV2">
+                        <div class="alert alert-warning">
+                            <p>
+                                Liquidity
+                                <span>@Liquidity%</span>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        }
+        @if (StableBorrow > 0 || VariableBorrow > 0)
+        {
+            <div class="row">
+                <div class="col">
+                    <a href="https://app.aave.com/reserve-overview/@Symbol?pool=AaveV2">
+                        <div class="alert alert-warning" role="alert">
+                            <p>
+                                StableBorrow
+                                <span>@StableBorrow%</span>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="https://app.aave.com/reserve-overview/@Symbol?pool=AaveV2">
+                        <div class="alert alert-warning" role="alert">
+                            <p>
+                                VariableBorrow
+                                <span>@VariableBorrow%</span>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        }
+        <div class="row">
+            <div class="col">
+                <div class="alert alert-warning" role="alert">
+                    <HistoricalData Symbol="@Symbol"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@code {
+    [Parameter]
+    public string Symbol { get; set; }
+
+    [Parameter]
+    public decimal Dollar { get; set; }
+
+    [Parameter]
+    public decimal Ether { get; set; }
+
+    [Parameter]
+    public decimal Liquidity { get; set; }
+
+    [Parameter]
+    public decimal StableBorrow { get; set; }
+
+    [Parameter]
+    public decimal VariableBorrow { get; set; }
+    }

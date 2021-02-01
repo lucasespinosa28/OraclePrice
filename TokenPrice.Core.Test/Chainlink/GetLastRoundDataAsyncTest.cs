@@ -12,7 +12,7 @@ namespace Chainlink
         {
             var price = new TokenPrice.Core.Chainlink.Oracle
             {
-                Web3 = neth.web3
+                Web3 = Neth.GetWeb3
             };
 
             var data = await price.GetLastRoundDataAsync("0xDC530D9457755926550b59e8ECcdaE7624181557");
