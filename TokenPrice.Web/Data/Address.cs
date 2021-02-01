@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TokenPrice.Web.Data
+namespace PriceOracle.Web.Data
 {
     public partial class Database
     {

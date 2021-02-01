@@ -5,7 +5,7 @@ using Nethereum.ENS;
 using Nethereum.Web3;
 
 
-namespace TokenPrice.Core
+namespace PriceOracle.Core
 {
     public partial class Utils
     {

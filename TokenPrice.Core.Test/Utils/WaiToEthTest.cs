@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 using Xunit;
-using static TokenPrice.Core.Utils;
+using static PriceOracle.Core.Utils;
 
 
 namespace Utils

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TokenPrice.Web.Data
+namespace PriceOracle.Web.Data
 {
     public partial class TokenPrices
     {

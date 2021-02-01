@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TokenPrice.Core.Models
+namespace PriceOracle.Core.Models
 {
     public class TokenAddressSymbol
     {

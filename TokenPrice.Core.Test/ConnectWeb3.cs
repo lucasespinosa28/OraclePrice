@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Nethereum.Web3;
-namespace TokenPrice.Core.Test
+namespace PriceOracle.Core.Test
 {
     public class Neth
     {

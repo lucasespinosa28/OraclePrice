@@ -1,5 +1,5 @@
-﻿using TokenPrice.Core;
-using TokenPrice.Core.Test;
+﻿using PriceOracle.Core;
+using PriceOracle.Core.Test;
 using System.Numerics;
 using Xunit;
 

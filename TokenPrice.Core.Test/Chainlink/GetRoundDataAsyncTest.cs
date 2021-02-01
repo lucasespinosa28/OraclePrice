@@ -1,5 +1,5 @@
-﻿using TokenPrice.Core;
-using TokenPrice.Core.Test;
+﻿using PriceOracle.Core;
+using PriceOracle.Core.Test;
 using System.Numerics;
 using Xunit;
 
@@ -11,7 +11,7 @@ namespace Chainlink
         [Fact]
         public async void GetRoundDataAsync()
         {
-            var price = new TokenPrice.Core.Chainlink.Oracle
+            var price = new PriceOracle.Core.Chainlink.Oracle
             {
                 Web3 = Neth.GetWeb3
             };

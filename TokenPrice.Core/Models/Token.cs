@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-namespace TokenPrice.Core.Models
+namespace PriceOracle.Core.Models
 {
     public class Token
     {

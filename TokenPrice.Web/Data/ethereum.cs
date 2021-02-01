@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace TokenPrice.Web.Data
+namespace PriceOracle.Web.Data
 {
     public static class EthereumiInfo
     {

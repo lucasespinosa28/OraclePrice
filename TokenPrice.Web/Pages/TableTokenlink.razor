@@ -51,10 +51,19 @@
                                 <button type="button" class="btn-close" @onclick="() => Trigger(token)" aria-label="Close">X</button>
                             </div>
                             <div class="modal-body">
-                                <ModelToken Symbol="@token.Symbol" Dollar="@token.PriceUsd" Ether="@token.PriceEth" Liquidity="@token.Liquidity" StableBorrow="@token.StableBorrow" />
+                                <ModelToken Symbol="@token.Symbol" Dollar="@token.PriceUsd" Ether="@token.PriceUsd" Liquidity="@token.PriceEth" StableBorrow="@token.Liquidity" />
                             </div>
                             <div class="modal-footer">
-                                <a href="https://etherscan.io/token/@token.Address">@token.Address</a>
+                                <a href="https://etherscan.io/token/@token.StableBorrow
+
+#line default
+#line hidden
+#nullable disable
+            ;
+                                __o =
+#nullable restore
+#line 57 "C:\Users\lucas\source\repos\TokenPrice\TokenPrice.Web\Pages\TableTokenlink.razor"
+                                                                     token.Address">@token.Address</a>
                                 <button type="button" class="btn btn-secondary" @onclick="() => Trigger(token)">Close</button>
                             </div>
                         </div>

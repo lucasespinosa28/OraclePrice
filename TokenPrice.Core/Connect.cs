@@ -1,7 +1,7 @@
 ﻿using Nethereum.Web3;
 using Nethereum.Web3.Accounts;
 
-namespace TokenPrice.Core
+namespace PriceOracle.Core
 {
     public class Connect
     {

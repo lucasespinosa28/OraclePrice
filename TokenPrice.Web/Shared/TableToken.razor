@@ -85,7 +85,7 @@
         EthToken.TotalSupply = new BigInteger(11446688522);
 
         var aave = new Aave(Connect.Web3);
-        var Erc20 = new TokenPrice.Core.Erc20.Erc20(Connect.Web3);
+        var Erc20 = new PriceOracle.Core.Erc20.Erc20(Connect.Web3);
         var protocolDataProvider = aave.ProtocolDataProvider();
         var PriceOracle = aave.PriceOracle();
         var Address = new List<string>() { };

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Nethereum.Web3;
 
-namespace TokenPrice.Core.Erc20
+namespace PriceOracle.Core.Erc20
 {
     public class Erc20
     {

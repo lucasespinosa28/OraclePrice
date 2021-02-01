@@ -3,7 +3,7 @@ using System;
 using Nethereum.ENS;
 using System.Threading.Tasks;
 
-namespace TokenPrice.Core
+namespace PriceOracle.Core
 {
     public class Ens
     { 

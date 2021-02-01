@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace TokenPrice.Core
+namespace PriceOracle.Core
 {
     public partial class Utils
     {
