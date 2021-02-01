@@ -7,6 +7,10 @@
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <BlazorCacheBootResources>false</BlazorCacheBootResources>
+    <Authors>lucas espinosa</Authors>
+    <Description>Web interface for oracle prices feeds</Description>
+    <Copyright>Copyright (c) 2021, lucasespinosa28</Copyright>
+    <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
