@@ -95,7 +95,7 @@
         EthToken.TotalSupply = new BigInteger(11446688522);
 
 
-        var data = await HttpClient.GetStringAsync($"{MyNavigationManager.BaseUri}/data/AddressChainlink.json");
+        var data = await HttpClient.GetStringAsync($"https://gateway.pinata.cloud/ipfs/QmdpEuNvtG5z8znBk4pxqKTT5VfY6imQHe2g9Dea3MVs9P");
         var json = JsonSerializer.Deserialize<Rootobject>(data, new JsonSerializerOptions { AllowTrailingCommas = true });
 
         for (int i = 0; i < json.Address.Length; i++)
