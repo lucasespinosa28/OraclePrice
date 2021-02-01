@@ -1,7 +1,6 @@
 ﻿<table class="table">
     <thead>
         <tr>
-            <th scope="col">#</th>
             <th scope="col">Symbol</th>
             <th scope="col">Name</th>
             @*<th scope="col">Address</th>*@
@@ -25,9 +24,8 @@
         }
         @foreach (var token in Tokens)
         {
-    <tr @onclick="(() => Trigger(token))" id="@token.Symbol" style="cursor: pointer;">
-        <th><img style="max-height: 35px; max-width: 35px" src="Images/Tokens/dai.svg" alt="" /></th>
-        <td class="fs-4">@token.Symbol</td>
+        <tr @onclick="(() => Trigger(token))" id="@token.Symbol" style="cursor: pointer;">
+       <td class="fs-4">@token.Symbol</td>
         <td class="fs-4">@token.Name</td>
         @*<td class="fs-4">@token.Address</td>*@
         @if (token.Symbol.ToLower() == "eth")

@@ -31,7 +31,6 @@
         @foreach (var token in Tokens)
         {
             <tr @onclick="(() => Trigger(token))" id="@token.Symbol" style="cursor: pointer;">
-                <th><img style="max-height: 35px; max-width: 35px" src="Images/Tokens/dai.svg" alt="" /></th>
                 <td class="fs-4">@token.Symbol</td>
                 <td class="fs-4">@token.Name</td>
                 @*<td class="fs-4">@token.Address</td>*@
@@ -106,7 +105,7 @@
         EthToken.TotalSupply = new BigInteger(11446688522);
 
 
-        var data = await HttpClient.GetStringAsync($"{MyNavigationManager.BaseUri}/data/AddressChainlink.json");
+        var data = await HttpClient.GetStringAsync($"{MyNavigationManager.BaseUri}QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn/data/AddressChainlink.json");
         var json = JsonSerializer.Deserialize<Rootobject>(data, new JsonSerializerOptions { AllowTrailingCommas = true });
 
         for (int i = 0; i < json.Address.Length; i++)
